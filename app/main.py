@@ -3,7 +3,8 @@ from fastapi.responses import JSONResponse
 from app.models import DetectionResponse, ErrorResponse
 from app.detector import LogoDetector
 from app.utils import pil_image_from_bytes, SUPPORTED_MIMES
-import io
+from typing import List
+
 
 app = FastAPI(title="T-Bank Logo Detector", version="1.0")
 
@@ -12,21 +13,27 @@ app = FastAPI(title="T-Bank Logo Detector", version="1.0")
 detector = LogoDetector(weights_path="weights/best.pt", conf=0.25)
 
 @app.post("/detect", response_model=DetectionResponse, responses={400: {"model": ErrorResponse}})
-async def detect_logo(file: UploadFile = File(...)):
-    """Детекция логотипа Т-банка на изображении
+async def detect_logo(files: List[UploadFile] = File(...)):
+    """
+    Детекция логотипа Т-банка на изображении или в папке с изображениями.
     Args:
-        file: Загружаемое изображение (JPEG, PNG, BMP, WEBP)
+        files: Один или несколько файлов (JPEG, PNG, BMP, WEBP)
     Returns:
         DetectionResponse: Результаты детекции с координатами найденных логотипов
     """
-    if file.content_type not in SUPPORTED_MIMES:
-        raise HTTPException(status_code=400, detail=f"Unsupported format: {file.content_type}")
+    detections_all = []
 
-    data = await file.read()
-    try:
-        img = pil_image_from_bytes(data)
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=f"Invalid image: {str(e)}")
+    for file in files:
+        if file.content_type not in SUPPORTED_MIMES:
+            raise HTTPException(status_code=400, detail=f"Unsupported format: {file.content_type}")
 
-    detections = detector.detect(img)
-    return DetectionResponse(detections=detections)
+        data = await file.read()
+        try:
+            img = pil_image_from_bytes(data)
+        except Exception as e:
+            raise HTTPException(status_code=400, detail=f"Invalid image: {str(e)}")
+
+        detections = detector.detect(img)
+        detections_all.extend(detections)
+
+    return DetectionResponse(detections=detections_all)
