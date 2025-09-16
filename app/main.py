@@ -1,8 +1,8 @@
 from fastapi import FastAPI, File, UploadFile, HTTPException
 from fastapi.responses import JSONResponse
-from app.models import DetectionResponse, ErrorResponse
-from app.detector import LogoDetector
-from app.utils import pil_image_from_bytes, SUPPORTED_MIMES
+from models import DetectionResponse, ErrorResponse
+from detector import LogoDetector
+from utils import pil_image_from_bytes, SUPPORTED_MIMES
 from typing import List
 
 
