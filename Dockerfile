@@ -23,7 +23,10 @@ RUN pip install --default-timeout=120 --no-cache-dir \
 
 COPY app/ .  
 
-RUN useradd -m appuser
+RUN useradd -m appuser \
+    && mkdir -p /logs \
+    && chown -R appuser:appuser /logs
+
 
 ENV YOLO_CONFIG_DIR=/app/ultralytics
 

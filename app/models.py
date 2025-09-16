@@ -1,5 +1,9 @@
+import logging
 from pydantic import BaseModel, Field
 from typing import List, Optional
+
+logger = logging.getLogger(__name__)
+logger.debug("Загрузка pydantic-моделей...")
 
 class BoundingBox(BaseModel):
     """Абсолютные координаты BoundingBox"""
@@ -20,3 +24,5 @@ class ErrorResponse(BaseModel):
     """Ответ при ошибке"""
     error: str = Field(..., description="Описание ошибки")
     detail: Optional[str] = Field(None, description="Дополнительная информация")
+
+logger.debug("Модели успешно загружены")
