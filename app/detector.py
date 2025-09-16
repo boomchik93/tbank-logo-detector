@@ -1,5 +1,5 @@
 from ultralytics import YOLO
-from app.models import Detection, BoundingBox
+from models import Detection, BoundingBox
 from typing import List
 from PIL import Image
 import numpy as np
