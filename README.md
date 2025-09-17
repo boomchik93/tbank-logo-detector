@@ -77,8 +77,8 @@
 
 1. Клонирование репозитория
    ```bash 
-git clone https://github.com/boomchik93/tbank-logo-detector.git
-cd tbank-logo-detector   
+	git clone https://github.com/boomchik93/tbank-logo-detector.git
+	cd tbank-logo-detector   
 	```
 
 
